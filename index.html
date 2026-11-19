@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess Rewind</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Chess Rewind</h1>
+    <p>Upload a picture of a chess board and see a way the game could have reached it, one move at a time.</p>
+  </header>
+
+  <main>
+    <div class="setup">
+      <!-- Step 1: image -->
+      <section class="card" id="imageCard">
+        <h2><span class="step">1</span> Board image</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="fileInput" accept="image/*" hidden>
+          <strong>Choose an image</strong> or drag it here
+          <small>You can also paste a screenshot (Ctrl+V)</small>
+        </label>
+        <div class="image-stage" id="imageStage" hidden>
+          <div class="image-wrap" id="imageWrap">
+            <canvas id="imageCanvas"></canvas>
+          </div>
+          <p class="hint">Drag the 4 corner dots onto the board's corners (the outer edge of the squares). Screenshots are found automatically.</p>
+          <div class="row">
+            <button id="detectBtn" class="btn">Auto-detect board</button>
+            <button id="readBtn" class="btn primary">Read pieces</button>
+            <label class="check"><input type="checkbox" id="flippedCheck"> Black at bottom</label>
+          </div>
+          <button id="newImageBtn" class="link">Use a different image</button>
+        </div>
+      </section>
+
+      <!-- Step 2: editor -->
+      <section class="card" id="editorCard">
+        <h2><span class="step">2</span> Check the position</h2>
+        <p class="hint" id="editorHint">Fix any wrong squares: pick a piece on the right, then click a square (right-click clears it). Tip: after fixing one of each piece type, press <b>Re-read using my fixes</b> and the rest usually fall into place.</p>
+        <div class="editor">
+          <div id="editorBoard"></div>
+          <div class="palette" id="palette"></div>
+        </div>
+        <div class="row">
+          <span class="label">Side to move:</span>
+          <label class="radio"><input type="radio" name="turn" value="w" checked> White</label>
+          <label class="radio"><input type="radio" name="turn" value="b"> Black</label>
+        </div>
+        <div class="row">
+          <button id="rereadBtn" class="btn" disabled>Re-read using my fixes</button>
+          <button id="startPosBtn" class="btn">Starting position</button>
+          <button id="clearBtn" class="btn">Clear</button>
+        </div>
+        <div class="row fen-row">
+          <input id="fenInput" spellcheck="false" aria-label="Position as FEN">
+          <button id="fenLoadBtn" class="btn">Load FEN</button>
+        </div>
+        <p class="message" id="editorMsg"></p>
+      </section>
+    </div>
+
+    <!-- Step 3: results -->
+    <section class="card" id="resultCard">
+      <h2><span class="step">3</span> How this position was reached</h2>
+      <div class="row">
+        <button id="solveBtn" class="btn primary big">Find the moves</button>
+        <button id="cancelBtn" class="btn" hidden>Stop</button>
+        <span class="status" id="solveStatus"></span>
+      </div>
+      <div class="progress" id="progress" hidden><div id="progressBar"></div></div>
+      <div class="solutions" id="solutions"></div>
+
+      <div class="replay" id="replay" hidden>
+        <div class="replay-board">
+          <div class="evalbar" id="evalBar" title="Who is winning (Stockfish)">
+            <div class="eval-white" id="evalWhite"></div>
+            <span class="eval-text" id="evalText">0.0</span>
+          </div>
+          <div id="replayBoard"></div>
+        </div>
+        <div class="replay-side">
+          <div class="move-info" id="moveInfo">Starting position</div>
+          <div class="controls">
+            <button class="btn icon" id="firstBtn" title="First (Home)">&#x23EE;</button>
+            <button class="btn icon" id="prevBtn" title="Previous (Left arrow)">&#x25C0;</button>
+            <button class="btn primary next" id="nextBtn" title="Next (Right arrow)">Next move &#x25B6;</button>
+            <button class="btn icon" id="lastBtn" title="Last (End)">&#x23ED;</button>
+          </div>
+          <div class="row">
+            <button class="btn" id="playBtn">Auto-play</button>
+            <button class="btn" id="flipBtn">Flip board</button>
+          </div>
+          <div class="engine-line" id="engineLine"></div>
+          <ol class="moves" id="moveList"></ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/recognize.js"></script>
+  <script src="js/search-core.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
